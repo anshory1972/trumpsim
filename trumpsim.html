@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>US Reciprocal Tariff Simulation Guide</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .center {
+      text-align: center;
+    }
+    ol {
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 10px;
+    }
+    .download {
+      display: block;
+      margin: 15px 0;
+      text-align: center;
+    }
+    .download a {
+      background: #007BFF;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    .download a:hover {
+      background: #0056b3;
+    }
+    .footer {
+      text-align: center;
+      font-size: 0.9em;
+      color: #777;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>US Reciprocal Tariff Simulation (Step-by-step)</h1>
+    <p class="center"><strong>Dewan Ekonomi Nasional RI</strong></p>
+
+    <div class="download">
+      <a href="#" download>Download trumpsim.zip</a>
+    </div>
+
+    <ol>
+      <li>Download <strong>trumpsim.zip</strong> and unzip into a folder.</li>
+      <li>Open <strong>tariff-reciprocal.xlsx</strong>. It contains 160 GTAP countries. Fill in the reciprocal tariff rate that US imposes on each of them.</li>
+      <li>Open <strong>trumptariff0.har</strong> using Viewhar. Copy and paste the values from step 2 into the header <code>TRMP</code>. Save the file.</li>
+      <li>Open CMD (Command Prompt) and navigate to the folder where you unzipped the files.</li>
+      <li>Run the following command: <code>aggtrump</code>. This aggregates tariffs into 31 relevant countries.</li>
+      <li>Run: <code>tablo -pgs calcrate0</code>. This prepares the shockfile for simulation.</li>
+      <li>Run: <code>gemsim -cmf calcrate0.cmf</code>. This will generate two files:
+        <ul>
+          <li><code>ratefile0.har</code>: contains initial tariff rates to verify</li>
+          <li><code>tariffshock.har</code>: final power of tariff used in the simulation</li>
+        </ul>
+      </li>
+      <li>Study these simulation files: <code>sim1lr.cmf</code>, <code>sim2sr1.cmf</code>, <code>sim3sr2.cmf</code>. They differ in labor market closure assumptions.  
+      <br><em>Edit these <code>.cmf</code> files especially if you want to add additional tariff shocks that countries will impose on US as part of the trade deals.</em></li>
+      <li>Run simulations:
+        <ul>
+          <li><code>gtapv7 -cmf sim1lr.cmf</code></li>
+          <li><code>gtapv7 -cmf sim2sr1.cmf</code></li>
+          <li><code>gtapv7 -cmf sim3sr2.cmf</code></li>
+        </ul>
+      </li>
+      <li>Open <strong>viewsol</strong> and load the following files: <code>sim1lr.sl4</code>, <code>sim2sr1.sl4</code>, <code>sim3sr2.sl4</code>.</li>
+      <li>Copy to Excel the following variables if needed:
+        <ul>
+          <li><strong>GDP:</strong> qgdp</li>
+          <li><strong>Private consumption:</strong> qpriv</li>
+          <li><strong>Investment:</strong> qinv</li>
+          <li><strong>Government consumption:</strong> qgov</li>
+          <li><strong>Export:</strong> qxwreg</li>
+          <li><strong>Import:</strong> qmwreg</li>
+          <li><strong>Trade balance change ($M):</strong> del_tbal</li>
+          <li><strong>Output by sector:</strong> qo</li>
+          <li><strong>Export by sector:</strong> qxw</li>
+          <li><strong>Import by sector:</strong> qmw</li>
+        </ul>
+      </li>
+      <li>Run: <code>gemsim -cmf calcrate1.cmf</code> to compare the final and initial tariff rate.</li>
+    </ol>
+
+    <div class="footer">
+      &copy; 2025 Dewan Ekonomi Nasional RI
+    </div>
+  </div>
+</body>
+</html>
